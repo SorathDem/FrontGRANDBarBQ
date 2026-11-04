@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Caja · GranBar BQD</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header id="app-nav" class="topbar"></header>
+
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Operación</p>
+          <h1>Caja</h1>
+          <p class="subtle">Órdenes, facturas, cobros y cierre del día.</p>
+        </div>
+        <div class="page-actions">
+          <button id="newInvoiceBtn" class="btn btn-primary" type="button">
+            ＋ Nueva factura
+          </button>
+          <button id="closeCajaBtn" class="btn btn-danger" type="button">
+            Cerrar caja
+          </button>
+        </div>
+      </div>
+
+      <div id="pageAlert" class="alert hidden" role="status"></div>
+
+      <section class="card date-toolbar" aria-label="Fecha de trabajo">
+        <button id="prevDay" class="btn btn-ghost" type="button" title="Día anterior">
+          ◀
+        </button>
+        <input id="fecha" class="input" type="date" aria-label="Fecha" />
+        <button id="nextDay" class="btn btn-ghost" type="button" title="Día siguiente">
+          ▶
+        </button>
+        <button id="todayBtn" class="btn btn-ghost" type="button">Hoy</button>
+        <button id="refreshBtn" class="btn btn-ghost" type="button">Actualizar</button>
+        <span id="fechaHint" class="subtle" style="margin-left: auto"></span>
+      </section>
+
+      <div id="summary" class="summary-grid" aria-live="polite"></div>
+      <div id="methodBreakdown" class="method-breakdown" aria-label="Totales por método de pago"></div>
+
+      <section class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mesa</th>
+                <th>Hora</th>
+                <th>Método</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th style="text-align: right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+        <div id="empty" class="empty hidden">
+          <strong>Sin órdenes</strong>
+          <span>No hay órdenes registradas para la fecha seleccionada.</span>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="orderDialog" class="modal modal-wide" aria-labelledby="orderDialogTitle">
+      <form id="orderForm">
+        <div class="modal-head">
+          <div>
+            <h2 id="orderDialogTitle">Nueva factura</h2>
+            <p class="subtle" id="orderDialogSubtitle">
+              Registra una venta manual y asigna fecha, mesa y método de pago.
+            </p>
+          </div>
+          <button class="icon-btn" type="button" data-close aria-label="Cerrar">
+            ✕
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="grid-3">
+            <label class="field">
+              <span>Mesa</span>
+              <input
+                id="ofMesa"
+                class="input"
+                type="text"
+                placeholder="Ej. 4"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Fecha</span>
+              <input id="ofFecha" class="input" type="date" required />
+            </label>
+            <label class="field">
+              <span>Método de pago</span>
+              <select id="ofMetodo" class="input">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="items-head">
+            <h3>Productos de la orden</h3>
+            <span id="ofCount">0 ítems</span>
+          </div>
+          <div id="ofItems" class="items-editor"></div>
+
+          <div class="catalog-box">
+            <label class="field">
+              <span>Agregar producto</span>
+              <input
+                id="ofSearch"
+                class="input"
+                type="search"
+                placeholder="Buscar por nombre o categoría…"
+              />
+            </label>
+            <div id="ofCatalog" class="catalog-list"></div>
+          </div>
+
+          <div class="order-total">
+            <span>Total</span>
+            <strong id="ofTotal">$0</strong>
+          </div>
+
+          <div id="ofError" class="alert error hidden" role="alert"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-ghost" type="button" data-close>
+            Cancelar
+          </button>
+          <button id="ofSave" class="btn btn-primary" type="submit">
+            Crear factura
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="closeResultDialog" class="modal" aria-labelledby="closeResultTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="closeResultTitle">Caja cerrada</h2>
+          <p class="subtle">El cierre quedó guardado en el historial.</p>
+        </div>
+        <button class="icon-btn" type="button" data-close aria-label="Cerrar">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-grid">
+          <div class="summary-card primary">
+            <div class="summary-label">Total del día</div>
+            <div id="closeTotal" class="summary-value">$0</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Órdenes</div>
+            <div id="closeOrders" class="summary-value">0</div>
+          </div>
+        </div>
+        <p class="subtle">
+          Puedes consultar el historial y descargar los reportes PDF desde
+          <strong>Cierre caja</strong>.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close>Cerrar</button>
+        <a class="btn btn-primary" href="cierre_caja.html">Ver cierre</a>
+      </div>
+    </dialog>
+
+    <script type="module" src="js/caja.js"></script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cierre de caja · GranBar BQD</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header id="app-nav" class="topbar"></header>
+
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Historial y reportes</p>
+          <h1>Cierre de caja</h1>
+          <p class="subtle">Consulta los cierres guardados y descarga los PDF.</p>
+        </div>
+        <div class="page-actions">
+          <button id="refreshBtn" class="btn btn-ghost" type="button">
+            Actualizar
+          </button>
+        </div>
+      </div>
+
+      <div id="pageAlert" class="alert hidden" role="status"></div>
+
+      <div id="summary" class="summary-grid" aria-live="polite"></div>
+
+      <section class="report-grid" aria-label="Reportes PDF">
+        <div class="report-card">
+          <h3>Reporte diario</h3>
+          <p>Órdenes, totales por método de pago y detalle del día.</p>
+          <div class="report-row">
+            <input
+              id="fechaDiaria"
+              class="input"
+              type="date"
+              aria-label="Fecha del reporte diario"
+            />
+            <button id="btnDiario" class="btn btn-primary" type="button">
+              Abrir PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="report-card">
+          <h3>Reporte mensual</h3>
+          <p>Resumen del mes con los días que tuvieron ventas.</p>
+          <div class="report-row">
+            <input
+              id="mesMensual"
+              class="input"
+              type="month"
+              aria-label="Mes del reporte mensual"
+            />
+            <button id="btnMensual" class="btn btn-primary" type="button">
+              Abrir PDF
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="items-head" style="margin-top: 22px">
+        <h3>Cierres guardados</h3>
+        <span id="cierreCount">0 cierres</span>
+      </div>
+
+      <section class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Órdenes</th>
+                <th>Total del día</th>
+                <th style="text-align: right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cierreBody"></tbody>
+          </table>
+        </div>
+        <div id="empty" class="empty hidden">
+          <strong>Sin cierres</strong>
+          <span
+            >Cuando cierres la caja desde la sección Caja, el cierre aparecerá
+            aquí.</span
+          >
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="js/cierre.js"></script>
+  </body>
+</html>
