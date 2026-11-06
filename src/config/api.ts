@@ -20,9 +20,9 @@ export const API_PRESETS = [
     value: 'http://localhost:4000',
     label: 'AppMovilBackend local',
   },
-];
+] as const;
 
-export function normalizeBase(value) {
+export function normalizeBase(value: string | null | undefined): string {
   let base = String(value || '').trim();
   if (!base) return DEFAULT_API_BASE;
   if (!/^https?:\/\//i.test(base)) {
@@ -32,7 +32,7 @@ export function normalizeBase(value) {
   return base.replace(/\/+$/, '');
 }
 
-export function getApiBase() {
+export function getApiBase(): string {
   try {
     return normalizeBase(localStorage.getItem(STORAGE_KEY) || DEFAULT_API_BASE);
   } catch {
@@ -40,7 +40,7 @@ export function getApiBase() {
   }
 }
 
-export function setApiBase(value) {
+export function setApiBase(value: string | null | undefined): string {
   const base = normalizeBase(value);
   try {
     localStorage.setItem(STORAGE_KEY, base);
@@ -50,16 +50,16 @@ export function setApiBase(value) {
   return base;
 }
 
-export function apiUrl(path) {
+export function apiUrl(path: string): string {
   const clean = String(path || '').startsWith('/') ? path : `/${path}`;
   return `${getApiBase()}${clean}`;
 }
 
-export function reportDiarioUrl(fecha) {
+export function reportDiarioUrl(fecha: string): string {
   return apiUrl(`/api/cajas/reporte/diario?fecha=${encodeURIComponent(fecha)}`);
 }
 
-export function reportMensualUrl(year, month) {
+export function reportMensualUrl(year: string | number, month: string | number): string {
   const y = String(year);
   const m = String(month).padStart(2, '0');
   return apiUrl(

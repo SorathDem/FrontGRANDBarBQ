@@ -1,13 +1,13 @@
-# Render Blueprint para el panel de administración web.
-# El repositorio contiene el sitio en la raíz y no necesita build.
+# Render Blueprint para el panel de administración web (React + Vite).
+# El build genera la carpeta dist y Render publica ese resultado.
 
 services:
   - type: web
     name: granbar-admin-web
     runtime: static
     branch: main
-    buildCommand: ""
-    staticPublishPath: ./
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
     headers:
       - path: /*
         name: X-Content-Type-Options
@@ -27,3 +27,9 @@ services:
       - path: /*
         name: Cache-Control
         value: no-cache
+    routes:
+      # React Router usa rutas del navegador (/productos, /caja, /cierre).
+      # Render debe devolver index.html en cualquier ruta para el SPA.
+      - type: rewrite
+        source: /*
+        destination: /index.html

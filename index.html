@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -6,60 +6,15 @@
     <title>GranBar BQD · Administración</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#c62828" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <meta
+      name="description"
+      content="Panel de administración de GranBar BQD: productos, caja, facturas y cierres."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body class="login-page">
-    <main class="login-wrap">
-      <section class="login-hero">
-        <div class="brand-mark big">GB</div>
-        <h1>GranBar BQD</h1>
-        <p>
-          Panel de administración para productos, caja, facturas y cierres del
-          restaurante.
-        </p>
-        <ul>
-          <li>Gestiona el catálogo y el stock</li>
-          <li>Cobra, edita e imprime facturas</li>
-          <li>Cierra la caja y descarga reportes PDF</li>
-        </ul>
-      </section>
-
-      <section class="login-card">
-        <h2>Ingresar</h2>
-        <p>Usa tu código de acceso de caja o administración.</p>
-
-        <form id="loginForm" autocomplete="on">
-          <label class="field">
-            <span>Código de acceso</span>
-            <input
-              id="code"
-              class="input"
-              type="password"
-              inputmode="numeric"
-              autocomplete="one-time-code"
-              placeholder="••••"
-              required
-              autofocus
-            />
-          </label>
-
-          <div id="loginError" class="alert error hidden" role="alert"></div>
-
-          <button id="loginBtn" class="btn btn-primary" type="submit">
-            Entrar al panel
-          </button>
-        </form>
-
-        <div class="login-footer">
-          <span>Servidor</span>
-          <button type="button" class="btn btn-ghost btn-sm" id="serverBtn">
-            <strong id="serverLabel"></strong>
-          </button>
-        </div>
-      </section>
-    </main>
-
-    <script type="module" src="js/login.js"></script>
+  <body>
+    <div id="root"></div>
+    <noscript>Este panel necesita JavaScript para funcionar.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

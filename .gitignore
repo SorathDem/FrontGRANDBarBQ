@@ -3,9 +3,13 @@
 Thumbs.db
 desktop.ini
 
-# Dependencias y logs
+# Dependencias, build y logs
 node_modules/
+dist/
+dist-ssr/
+.vite/
 *.log
+npm-debug.log*
 
 # Entorno local
 .env
@@ -15,3 +19,4 @@ node_modules/
 # Editores
 .vscode/
 .idea/
+*.local
