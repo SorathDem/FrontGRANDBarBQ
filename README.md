@@ -31,8 +31,9 @@ python -m http.server 5500
 Abre <http://localhost:5500> y entra con el código de caja o administrador
 configurado en la base de datos.
 
-> El backend ya permite CORS desde `http://localhost:5500` y
-> `http://127.0.0.1:5500`.
+> El backend incluido ya permite CORS desde `http://localhost:5500` y
+> `http://127.0.0.1:5500`. Si usas otro backend, agrega el origen en
+> `FRONTEND_ORIGINS`.
 
 ## Backend
 
@@ -72,18 +73,67 @@ PORT=4000
 URI apunte a otra. Para ver los mismos datos del restaurante usa
 `MONGO_DB=restaurante`.
 
-### Render
+### Desplegar en Render
 
-Si publicas este frontend en otro dominio, agrega ese origen a `FRONTEND_ORIGINS`
-en el servicio del backend (lista separada por comas). Por ejemplo:
+Este frontend está preparado para desplegarse como **Static Site** en Render.
+No tiene build ni variables de entorno de compilación: Render publica los
+archivos tal como están.
+
+El repositorio incluye `render.yaml` en la raíz. Si el repositorio es
+`AppMovilAdminWeb` (recomendado), puedes crear el sitio como Blueprint:
+
+1. En Render: **New > Blueprint**.
+2. Conecta este repositorio y la rama `main`.
+3. Render detecta `render.yaml` y crea el Static Site.
+4. Espera el deploy y abre la URL `https://<servicio>.onrender.com`.
+
+Con el nombre incluido en `render.yaml`, la URL sería
+`https://granbar-admin-web.onrender.com` si está disponible. Si el nombre ya
+está ocupado, cambia `name` en `render.yaml` antes de crear el Blueprint.
+
+También puedes crearlo manualmente con **New > Static Site**:
+
+| Campo | Valor |
+| --- | --- |
+| Branch | `main` |
+| Build Command | *(vacío)* |
+| Publish Directory | `.` |
+
+Si `AppMovilAdminWeb` está dentro de un monorepo, configura
+**Root Directory** = `AppMovilAdminWeb`, **Build Command** vacío y
+**Publish Directory** = `.`. Si usas un `render.yaml` en la raíz del monorepo,
+cambia `staticPublishPath` a `./AppMovilAdminWeb` o define
+`rootDir: AppMovilAdminWeb`.
+
+#### Variables del backend
+
+Después de crear el sitio, agrega su URL a `FRONTEND_ORIGINS` en el servicio
+del backend y vuelve a desplegar el backend:
 
 ```env
-FRONTEND_ORIGINS=https://mi-panel.onrender.com
 MONGO_DB=restaurante
+FRONTEND_ORIGINS=https://mi-panel.onrender.com,http://localhost:5500,http://127.0.0.1:5500
 ```
 
-El backend también acepta `http://localhost:5500` y `http://127.0.0.1:5500`
-para desarrollo.
+`FRONTEND_ORIGINS` acepta varios orígenes separados por comas. Sin este paso,
+el navegador bloqueará las peticiones al backend por CORS.
+
+> El backend desplegado debe incluir el código que lee `FRONTEND_ORIGINS`. Si
+> usas una versión anterior, actualiza el backend antes de probar el panel.
+
+El frontend usa `https://granbar-bq.onrender.com` por defecto. Si quieres otro
+backend por defecto, cambia `DEFAULT_API_BASE` en `js/config.js` antes de
+desplegar; también puedes cambiarlo en runtime desde el botón **Servidor**.
+
+#### Headers y archivos de despliegue
+
+`render.yaml` aplica `Cache-Control: no-cache` y cabeceras de seguridad
+(`X-Content-Type-Options`, `X-Frame-Options`, etc.). También se incluyen
+`favicon.svg`, `robots.txt` y `404.html`.
+
+La URL de Render usa HTTPS automáticamente. No necesitas configurar un dominio
+personalizado para probar; puedes agregarlo después desde **Settings > Custom
+Domains**.
 
 ## Estructura
 
@@ -93,6 +143,12 @@ AppMovilAdminWeb/
 ├── admin.html              # Productos
 ├── caja.html               # Caja / facturas / cierre
 ├── cierre_caja.html        # Historial y reportes
+├── 404.html                # Página de error
+├── favicon.svg
+├── robots.txt
+├── render.yaml             # Blueprint de Render (Static Site)
+├── .gitignore
+├── README.md
 ├── css/styles.css
 └── js/
     ├── config.js           # URL del backend y presets

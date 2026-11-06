@@ -1,0 +1,29 @@
+# Render Blueprint para el panel de administración web.
+# El repositorio contiene el sitio en la raíz y no necesita build.
+
+services:
+  - type: web
+    name: granbar-admin-web
+    runtime: static
+    branch: main
+    buildCommand: ""
+    staticPublishPath: ./
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Robots-Tag
+        value: noindex, nofollow
+      - path: /*
+        name: Permissions-Policy
+        value: "camera=(), microphone=(), geolocation=()"
+      - path: /*
+        name: Cache-Control
+        value: no-cache
